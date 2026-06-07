@@ -1,0 +1,13 @@
+services:
+  eleclab:
+    build: .
+    image: eleclab:latest
+    container_name: eleclab
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1210:1210"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:1210/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

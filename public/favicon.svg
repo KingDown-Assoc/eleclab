@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#141e2e"/>
+      <stop offset="1" stop-color="#080c14"/>
+    </linearGradient>
+    <linearGradient id="k" x1="0.15" y1="0.05" x2="0.85" y2="0.95">
+      <stop offset="0" stop-color="#7cecf8"/>
+      <stop offset="0.5" stop-color="#37dbf0"/>
+      <stop offset="1" stop-color="#2f7bf6"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#37dbf0" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#37dbf0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="0.7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="url(#bg)" stroke="#37dbf0" stroke-opacity="0.18" stroke-width="1"/>
+  <circle cx="31" cy="32" r="21" fill="url(#halo)"/>
+
+  <!-- faint circuit flourishes -->
+  <g stroke="#3aa6c4" stroke-opacity="0.55" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- resistor in the K mouth -->
+    <path d="M25,32 H29 l1.4,-2.6 2.8,5.2 2.8,-5.2 2.8,5.2 1.4,-2.6 H46"/>
+    <!-- capacitor bottom-left -->
+    <path d="M15,52 H11.5"/>
+    <path d="M11.5,48.5 V55.5"/>
+    <path d="M9,48.5 V55.5"/>
+    <!-- via/antenna top -->
+    <path d="M17,12 V8.5"/>
+    <!-- IC pins on the stem -->
+    <path d="M13.5,24 H10.5"/>
+    <path d="M13.5,40 H10.5"/>
+  </g>
+  <g fill="#3aa6c4" fill-opacity="0.72">
+    <circle cx="46" cy="32" r="1.9"/>
+    <circle cx="17" cy="8.5" r="1.6"/>
+  </g>
+
+  <!-- bold K: full-height stem + two diagonals -->
+  <g filter="url(#glow)">
+    <rect x="14.5" y="12.5" width="7.6" height="39" rx="3.6" fill="url(#k)"/>
+    <g stroke="url(#k)" stroke-width="8" stroke-linecap="round" fill="none">
+      <path d="M21,31 L46,13"/>
+      <path d="M21,33 L46,51"/>
+    </g>
+  </g>
+  <!-- bright solder nodes at the K tips -->
+  <g fill="#eafdff" stroke="url(#k)" stroke-width="1.5">
+    <circle cx="18.3" cy="13.4" r="2.3"/>
+    <circle cx="18.3" cy="50.6" r="2.3"/>
+    <circle cx="46" cy="13" r="2.3"/>
+    <circle cx="46" cy="51" r="2.3"/>
+  </g>
+</svg>

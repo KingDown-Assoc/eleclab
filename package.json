@@ -1,0 +1,26 @@
+{
+  "name": "eleclab",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "ÉlecLab — atelier interactif pour apprendre l'électricité",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host --port 1210",
+    "test": "node test/run.cjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.2.10",
+    "@fontsource-variable/outfit": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "JSCPP": "^2.0.9",
+    "lucide-react": "^0.383.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
