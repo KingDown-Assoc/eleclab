@@ -79,7 +79,6 @@ Par défaut, le conteneur est lié à `127.0.0.1:1210` (non exposé publiquement
 
 # IA / LLM
 
-Ce projet a été généré par Claude. Autant vous dire que moi, le dev web et l'UI
-: ça me casse bien les couilles.
+Ce projet a été développé par IA.
 
 Pull requests par IA acceptées.
