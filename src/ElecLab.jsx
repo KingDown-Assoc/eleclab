@@ -10341,6 +10341,7 @@ const CSS = `
   --amber:#b3720c; --amber-soft:#c98a16; --cyan:#0e8da6; --elec:#1f7fcf; --green:#138a63; --red:#cf3a4a;
   --wire:#5b6b80;
   --bb-hole:#c4cedb; --bb-hole-st:#9aa6b8; --bb-body:#e2e8f0; --bb-body-st:#c0cad9; --bb-edge:#eef2f8; --bb-groove:#d4dbe5; --bb-num:#67738a;
+  --panel:#ffffff; --ink:#1c2433;
   background:
     radial-gradient(900px 520px at 12% -8%, rgba(255,176,32,.12), transparent 60%),
     radial-gradient(900px 600px at 105% 115%, rgba(31,127,207,.10), transparent 60%),
@@ -10430,4 +10431,9 @@ const CSS = `
 :root[data-theme="light"] .short-warn{background:rgba(255,236,238,.96); border-color:rgba(207,58,74,.45);}
 :root[data-theme="light"] .gate-badge{background:rgba(235,242,252,.94); border-color:rgba(31,111,191,.32);}
 :root[data-theme="light"] .conflict-warn{background:rgba(255,244,228,.96); border-color:rgba(154,93,10,.45);}
+
+/* --- Light theme: Arduino tab — code editor, serial monitor, physical button --- */
+:root[data-theme="light"] .ard-editor{background:#f6f8fc;}
+:root[data-theme="light"] .ard-serial{background:#f6f8fc;}
+:root[data-theme="light"] .ard-btn-phys{color:#dfe7f3;}
 `;
