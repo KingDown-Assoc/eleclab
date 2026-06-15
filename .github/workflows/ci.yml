@@ -1,0 +1,48 @@
+name: CI
+
+# Valide chaque PR vers main avant merge :
+#   1. la suite de tests doit passer (npm test) ;
+#   2. l'image Docker de prod doit se construire EXACTEMENT comme en production
+#      (docker build = npm install + vite build + assemblage Apache), mais SANS push.
+# Une fois ces deux checks rendus "required" dans la règle de protection de main,
+# un échec bloque le merge.
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test suite
+        run: npm test
+
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build de validation (même chemin qu'en production, sans push)
+        run: docker build -t eleclab:ci .
