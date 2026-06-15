@@ -5,7 +5,7 @@ import {
   ChevronRight, ListChecks, Ruler, Save, FolderOpen, Download, Upload, Atom,
   ZoomIn, ZoomOut, Maximize, GraduationCap, ArrowRight, Trash, Menu, Palette,
   Undo2, Redo2, RotateCw, Copy, Share2, Image as ImageIcon, Link2, Timer, Play, Pause, LineChart, Tag, Crosshair, Sigma, FlaskConical, Target, Flame, Search, Award, Box, GitCompare,
-  Square, CircleDot, Usb, Sun, Thermometer, Volume2,
+  Square, CircleDot, Usb, Sun, Moon, Thermometer, Volume2,
 } from "lucide-react";
 
 import { solveArduino, BUS_W, LOGIC_GATES, SEG7_MAP, acAnalysis, batRint, busSimulate, clockTick, compNet, dcSweep, findNetConflicts, flattenChips, freqResponse, gateCost, hasBridge, hasDff, isBusComp, kirchhoffAnalysis, makeUF, maxPower, measureResistance, powerBudget, simulate, solveACNodes, solveCircuit, solveMixed, stepResponse, thevenin } from "./engine.js";
@@ -3152,17 +3152,17 @@ function ComponentBody({ c, res }) {
     const holes = []; let hi = 0;
     for (let C = 1; C <= BBOARD.COLS; C++) {
       const x = BBOARD.colX(C);
-      for (const y of BBOARD.rowsTop) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={y - 2.4} width={4.8} height={4.8} rx={1} fill="#0d131d" stroke="#5d6c84" strokeWidth={0.8} />);
-      for (const y of BBOARD.rowsBot) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={y - 2.4} width={4.8} height={4.8} rx={1} fill="#0d131d" stroke="#5d6c84" strokeWidth={0.8} />);
-      for (const r of BBOARD.rails) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={r.y - 2.4} width={4.8} height={4.8} rx={1} fill="#0d131d" stroke={r.pos ? "#b05a66" : "#4f74a4"} strokeWidth={0.8} />);
+      for (const y of BBOARD.rowsTop) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={y - 2.4} width={4.8} height={4.8} rx={1} fill="var(--bb-hole)" stroke="var(--bb-hole-st)" strokeWidth={0.8} />);
+      for (const y of BBOARD.rowsBot) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={y - 2.4} width={4.8} height={4.8} rx={1} fill="var(--bb-hole)" stroke="var(--bb-hole-st)" strokeWidth={0.8} />);
+      for (const r of BBOARD.rails) holes.push(<rect key={"h" + hi++} x={x - 2.4} y={r.y - 2.4} width={4.8} height={4.8} rx={1} fill="var(--bb-hole)" stroke={r.pos ? "#b05a66" : "#4f74a4"} strokeWidth={0.8} />);
     }
     const rails = BBOARD.rails.map((r, i) => <line key={"rl" + i} x1={-hw + 16} y1={r.y + (r.pos ? -6 : 6)} x2={hw - 16} y2={r.y + (r.pos ? -6 : 6)} stroke={r.pos ? "#ff6b7a" : "#6fb1ff"} strokeWidth={1.6} opacity={0.92} />);
     const railLbl = BBOARD.rails.flatMap((r, i) => { const t = r.pos ? "+" : "–"; const cl = r.pos ? "#ff9aa5" : "#a6ccff"; return [<text key={"la" + i} x={-hw + 8} y={r.y + 3.6} textAnchor="middle" fontSize="11" fontWeight="800" fill={cl}>{t}</text>, <text key={"lb" + i} x={hw - 8} y={r.y + 3.6} textAnchor="middle" fontSize="11" fontWeight="800" fill={cl}>{t}</text>]; });
-    const nums = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].map((C) => <text key={"n" + C} x={BBOARD.colX(C)} y={-0.5 * P + 3} textAnchor="middle" fontSize="7.5" fill="#aeb9c9" fontFamily="var(--font-m)">{C}</text>);
+    const nums = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60].map((C) => <text key={"n" + C} x={BBOARD.colX(C)} y={-0.5 * P + 3} textAnchor="middle" fontSize="7.5" fill="var(--bb-num)" fontFamily="var(--font-m)">{C}</text>);
     return (<g>
-      <rect x={-hw} y={-hh} width={2 * hw} height={2 * hh} rx={12} fill="#2b3545" stroke="#46546a" strokeWidth={1.8} />
-      <rect x={-hw + 2} y={-hh + 2} width={2 * hw - 4} height={2.2} rx={1.5} fill="#3e4a5d" opacity={0.7} />
-      <rect x={-hw + 5} y={-0.5 * P - 1} width={2 * hw - 10} height={P + 2} fill="#1a212d" />
+      <rect x={-hw} y={-hh} width={2 * hw} height={2 * hh} rx={12} fill="var(--bb-body)" stroke="var(--bb-body-st)" strokeWidth={1.8} />
+      <rect x={-hw + 2} y={-hh + 2} width={2 * hw - 4} height={2.2} rx={1.5} fill="var(--bb-edge)" opacity={0.7} />
+      <rect x={-hw + 5} y={-0.5 * P - 1} width={2 * hw - 10} height={P + 2} fill="var(--bb-groove)" />
       {rails}
       {holes}
       {railLbl}
@@ -7223,6 +7223,17 @@ function ArduinoStudio({ code, setCode, parts, setParts, isMobile, mission, miss
 }
 
 
+const THEME_KEY = "eleclab:theme";
+function loadTheme() {
+  if (typeof window === "undefined") return "dark";
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === "light" || saved === "dark") return saved;
+    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
+  } catch (e) {}
+  return "dark";
+}
+
 export default function ElecLab() {
   const boot = useMemo(() => ({ work: loadWork(), prog: loadProgress() }), []);
   useEffect(() => { document.title = "ÉlecLab"; }, []);
@@ -7239,6 +7250,12 @@ export default function ElecLab() {
   const [ardSheet, setArdSheet] = useState(false);
   const [ardLeftTab, setArdLeftTab] = useState("parcours");
   const [mainTab, setMainTab] = useState("elec");
+  const [theme, setTheme] = useState(loadTheme);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  }, [theme]);
   const [ardCode, setArdCode] = useState(ARD_DEFAULT_CODE);
   const [ardParts, setArdParts] = useState(ARD_DEFAULT_PARTS);
   const [activeMission, setActiveMission] = useState(boot.prog.activeMission || "m1");
@@ -7989,7 +8006,7 @@ export default function ElecLab() {
           <button className={"tab " + (mainTab === "num" ? "on" : "")} onClick={() => setMainTab("num")} title="Numérique" aria-label="Numérique"><ToggleRight size={15} /> <span className="tab-lbl">Numérique</span></button>
           <button className={"tab " + (mainTab === "arduino" ? "on" : "")} onClick={() => setMainTab("arduino")} title="Arduino" aria-label="Arduino"><Usb size={15} /> <span className="tab-lbl">Arduino</span></button>
         </nav>
-        {mainTab !== "arduino" && (<div className="top-actions">
+        <div className="top-actions">{mainTab !== "arduino" && (<>
           {arduinoComp && (!bbRunning
             ? <button className="icon-btn ard-bb" onClick={bbRun} aria-label="Téléverser et simuler" title="Téléverser le code et simuler le circuit"><Play size={16} /></button>
             : <button className="icon-btn ard-bb on" onClick={bbStop} aria-label="Arrêter la simulation" title="Arrêter"><Square size={16} /></button>)}
@@ -8002,7 +8019,9 @@ export default function ElecLab() {
           <button className={"icon-btn cmp-toggle " + (compareOpen ? "on" : "")} onClick={() => setCompareOpen(true)} aria-pressed={compareOpen} aria-label="Comparer deux circuits côte à côte" title="Comparer deux circuits côte à côte"><GitCompare size={17} /></button>
           <button className="icon-btn" onClick={() => setCircuitsOpen(true)} aria-label="Mes circuits (sauvegarder / charger)" title="Mes circuits"><Save size={17} /></button>
           <button className="icon-btn" onClick={() => setShowHelp(true)} aria-label="Aide"><HelpCircle size={17} /></button>
-        </div>)}
+        </>)}
+          <button className="theme-toggle" onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))} aria-label="Basculer le thème clair / sombre" title="Thème clair / sombre">{theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}</button>
+        </div>
       </header>
 
       {mainTab === "arduino" ? (
@@ -9399,6 +9418,7 @@ const CSS = `
   --text:#e9eef7; --muted:#97a4ba; --muted-2:#677692;
   --amber:#ffb020; --amber-soft:#ffd884; --cyan:#37dbf0; --elec:#63d0ff; --green:#3ad29a; --red:#ff5d72;
   --wire:#62788f;
+  --bb-hole:#0d131d; --bb-hole-st:#5d6c84; --bb-body:#2b3545; --bb-body-st:#46546a; --bb-edge:#3e4a5d; --bb-groove:#1a212d; --bb-num:#aeb9c9;
   --font-d:'Bricolage Grotesque Variable','Bricolage Grotesque',sans-serif; --font-b:'Outfit Variable','Outfit',sans-serif; --font-m:'JetBrains Mono',ui-monospace,monospace;
   position:fixed; inset:0; display:flex; flex-direction:column;
   font-family:var(--font-b); color:var(--text);
@@ -10307,4 +10327,113 @@ const CSS = `
 .ard-serial pre{margin:0; padding:8px 10px; overflow:auto; font-family:'SFMono-Regular',Consolas,monospace; font-size:12px; line-height:1.45; color:#bfe8c8; white-space:pre-wrap; word-break:break-word;}
 .ard-serial-empty{color:#5a6678; font-style:italic;}
 @media (max-width: 900px){ .ard-studio{flex-direction:column;} }
+
+/* ---------- Light theme (basculé via <html data-theme="light">) ---------- */
+.theme-toggle{width:38px; height:38px; display:grid; place-items:center; border-radius:10px; color:var(--muted); border:1px solid var(--line); background:none; cursor:pointer; transition:.16s;}
+.theme-toggle:hover{color:var(--text); border-color:var(--line-2);}
+
+:root[data-theme="light"] body{background:#f4f7fb;}
+:root[data-theme="light"] .app{
+  --bg:#f4f7fb; --bg-2:#ffffff; --bg-3:#eaf0f8;
+  --grid:rgba(40,90,150,.10);
+  --line:rgba(20,45,80,.14); --line-2:rgba(20,45,80,.22);
+  --text:#15202f; --muted:#51607a; --muted-2:#7b8aa1;
+  --amber:#b3720c; --amber-soft:#c98a16; --cyan:#0e8da6; --elec:#1f7fcf; --green:#138a63; --red:#cf3a4a;
+  --wire:#5b6b80;
+  --bb-hole:#c4cedb; --bb-hole-st:#9aa6b8; --bb-body:#e2e8f0; --bb-body-st:#c0cad9; --bb-edge:#eef2f8; --bb-groove:#d4dbe5; --bb-num:#67738a;
+  --panel:#ffffff; --ink:#1c2433;
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(255,176,32,.12), transparent 60%),
+    radial-gradient(900px 600px at 105% 115%, rgba(31,127,207,.10), transparent 60%),
+    var(--bg);
+}
+:root[data-theme="light"] .topbar{background:linear-gradient(180deg, rgba(255,255,255,.85), rgba(238,243,250,.55));}
+:root[data-theme="light"] .tabs{background:rgba(20,45,80,.05);}
+:root[data-theme="light"] .tab.on{background:linear-gradient(180deg,#ffffff,#eef3fa);}
+:root[data-theme="light"] .rail{background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(244,247,251,.4));}
+:root[data-theme="light"] .panel{background:linear-gradient(180deg,var(--bg-2),#f1f6fc);}
+:root[data-theme="light"] .modal,
+:root[data-theme="light"] .sheet{box-shadow:0 24px 80px rgba(20,40,80,.18);}
+:root[data-theme="light"] .logo{box-shadow:0 0 0 1px rgba(255,200,80,.55), 0 6px 18px rgba(255,160,20,.28);}
+
+/* --- Light theme: readability pass (text colours hardcoded for the dark bg) --- */
+:root[data-theme="light"] .niv-bar{background:rgba(20,45,80,.06);}
+:root[data-theme="light"] .seg button.on{background:#eef3fa;}
+
+:root[data-theme="light"] .objectif,
+:root[data-theme="light"] .step,
+:root[data-theme="light"] .help-list li,
+:root[data-theme="light"] .diag-row,
+:root[data-theme="light"] .mini-toggle,
+:root[data-theme="light"] .quiz-opt,
+:root[data-theme="light"] .lesson-p,
+:root[data-theme="light"] .hood-f,
+:root[data-theme="light"] .quiz-q,
+:root[data-theme="light"] .cpu-ta,
+:root[data-theme="light"] .ard-editor{color:#23324a;}
+
+:root[data-theme="light"] .ard-part-x,
+:root[data-theme="light"] .ard-pot span,
+:root[data-theme="light"] .ard-sensor-val,
+:root[data-theme="light"] .ard-buzzer,
+:root[data-theme="light"] .ard-hint,
+:root[data-theme="light"] .ard-serial-h button{color:#5b6b80;}
+
+:root[data-theme="light"] .explication,
+:root[data-theme="light"] .lesson-key,
+:root[data-theme="light"] .quiz-opt.good,
+:root[data-theme="light"] .diag-row.ok,
+:root[data-theme="light"] .ard-mission-done,
+:root[data-theme="light"] .ard-notice,
+:root[data-theme="light"] .ard-serial pre{color:#0f7a54;}
+:root[data-theme="light"] .lesson-key svg{color:#138a63;}
+
+:root[data-theme="light"] .short-warn,
+:root[data-theme="light"] .warn-p,
+:root[data-theme="light"] .note-line.warn,
+:root[data-theme="light"] .del-btn,
+:root[data-theme="light"] .pg-yes,
+:root[data-theme="light"] .ard-err,
+:root[data-theme="light"] .cpu-badge.halt,
+:root[data-theme="light"] .cpu-err,
+:root[data-theme="light"] .prog-del,
+:root[data-theme="light"] .quiz-opt.bad,
+:root[data-theme="light"] .diag-row.error{color:#bf2f3d;}
+
+:root[data-theme="light"] .conflict-warn,
+:root[data-theme="light"] .diag-row.warn{color:#9a5d0a;}
+:root[data-theme="light"] .cmp-tag.rem{color:#bf4a2a;}
+
+:root[data-theme="light"] .gate-badge,
+:root[data-theme="light"] .lesson-pont,
+:root[data-theme="light"] .lesson-pont b,
+:root[data-theme="light"] .lesson-why,
+:root[data-theme="light"] .lesson-why b,
+:root[data-theme="light"] .pc-journey{color:#1f6fbf;}
+
+:root[data-theme="light"] .exo-head,
+:root[data-theme="light"] .exo-toggle,
+:root[data-theme="light"] .exo-intro{color:#6b4fc4;}
+
+:root[data-theme="light"] .ard-addrow button,
+:root[data-theme="light"] .ard-clock,
+:root[data-theme="light"] .ard-serial-h{color:#0c7d93;}
+
+/* --- Light theme: flow toggle, current dots, floating controls & banners --- */
+:root[data-theme="light"] .flow-toggle{background:rgba(20,45,80,.05);}
+:root[data-theme="light"] .wire-particles{stroke:#5a3300; stroke-dasharray:2 12;}
+:root[data-theme="light"] .wire-particles.elec{stroke:#0a3f73;}
+:root[data-theme="light"] .edit-ctl,
+:root[data-theme="light"] .zoom-ctl,
+:root[data-theme="light"] .volt-scale,
+:root[data-theme="light"] .time-panel,
+:root[data-theme="light"] .wiring-tip{background:rgba(255,255,255,.9); border-color:var(--line-2);}
+:root[data-theme="light"] .short-warn{background:rgba(255,236,238,.96); border-color:rgba(207,58,74,.45);}
+:root[data-theme="light"] .gate-badge{background:rgba(235,242,252,.94); border-color:rgba(31,111,191,.32);}
+:root[data-theme="light"] .conflict-warn{background:rgba(255,244,228,.96); border-color:rgba(154,93,10,.45);}
+
+/* --- Light theme: Arduino tab — code editor, serial monitor, physical button --- */
+:root[data-theme="light"] .ard-editor{background:#f6f8fc;}
+:root[data-theme="light"] .ard-serial{background:#f6f8fc;}
+:root[data-theme="light"] .ard-btn-phys{color:#dfe7f3;}
 `;
